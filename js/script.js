@@ -1,7 +1,7 @@
 const frases = {
     feliz: [
         "¡Qué genial verte sonriendo! Me llena de energía positiva😊.",
-        "Me alegra mucho verte feliz, amiga. Eres una de las mejores que conozco.",
+        "Me alegra mucho verte feliz, Nelsi. Eres una de las mejores que conozco.",
         "Cuando estás de buen humor, todo parece más divertido. Me siento afortunado de contar con tu amistad.",
         "Eres una gran amiga y me haces sentir muy afortunado. Gracias por compartir tu alegría conmigo.",
         "Verte feliz me motiva a seguir adelante con una sonrisa. Eres una persona maravillosa.",
@@ -18,14 +18,14 @@ const frases = {
         "Aunque no pueda hacer que todo mejore ahora, prometo que siempre estaré a tu lado.",
         "No importa lo que pase, nunca estarás sola. Yo estaré aquí para ti, en cada momento.",
         "A veces la vida se siente pesada, pero te prometo que juntos podemos con todo.",
-        "Te entiendo, amiga. Si quieres hablar o simplemente estar en silencio, estaré aquí.",
+        "Te entiendo, Nelsi. Si quieres hablar o simplemente estar en silencio, estaré aquí.",
         "Todo pasa, y sé que tu sonrisa regresará, porque eres más fuerte de lo que crees.",
         "Me duele verte triste, pero lo que más quiero es que sepas que te quiero mucho y estoy contigo.",
         "Aunque no pueda quitarte la tristeza, quiero que sepas que me importas mucho. Estoy aquí para ti.",
     ],
     cansado: [
         "Tómate un momento para respirar y recargar energías. 🌿",
-        "Descansa, amiga. Todo lo que has hecho hoy ha sido impresionante, ahora es momento de cuidar de ti.",
+        "Descansa, Nelsi. Todo lo que has hecho hoy ha sido impresionante, ahora es momento de cuidar de ti.",
         "Si necesitas dormir, descansar o relajarte, hazlo. Estaré esperando para acompañarte cuando te sientas mejor.",
         "Eres increíblemente fuerte, pero incluso las más fuertes necesitan descansar. Estoy aquí para ayudarte.",
         "Sé que estás agotada, pero quiero que sepas que no tienes que hacer todo sola, siempre estaré para ti.",
@@ -52,6 +52,17 @@ const emotionButtons = document.getElementById("emotion-buttons");
 function clearMessages() {
     chatMessages.innerHTML = '';
 }
+//DE AQUI
+let voices = [];
+
+function populateVoiceList() {
+    voices = speechSynthesis.getVoices();
+}
+
+populateVoiceList();
+if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = populateVoiceList;
+}
 
 function addMessage(sender, text) {
     const messageContainer = document.createElement("div");
@@ -77,6 +88,10 @@ function addMessage(sender, text) {
     // Convertir el texto del bot en voz
     if (sender === "bot") {
         const utterance = new SpeechSynthesisUtterance(text);
+        const selectedVoice = voices.find(voice => voice.name.includes("Google") || voice.name.includes("Microsoft"));
+        if (selectedVoice) {
+            utterance.voice = selectedVoice;
+        }
         speechSynthesis.speak(utterance);
     }
 }
